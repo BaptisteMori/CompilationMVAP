@@ -1,0 +1,4 @@
+Manifest-Version: 1.0
+Version: 2.1
+Main-Class: CBaP
+Class-Path: /usr/local/java/antlr-4.4-complete.jar
