@@ -57,6 +57,8 @@ instruction returns [ String code ]
   : a=assignation finInstruction {$code=$a.code;}
   | b=expr finInstruction {$code=$b.code;}
   | tantque {$code=$tantque.code;}
+  | si {$code=$si.code;}
+  | pour {$code=$pour.code;}
   | entreesortie finInstruction {$code=$entreesortie.code;}
   | finInstruction {$code="";}
   ;
@@ -66,9 +68,24 @@ assignation returns [ String code, String id ]
   ;
 
 tantque returns [String code]
-  : 'while' '(' condition ')' bloc
+  : 'while' '(' logique ')' bloc
   {int label1 = nextLabel(); int label2= nextLabel();
-  $code="LABEL " + label1 + "\n" + $condition.code + "JUMPF " + label2 + "\n" + $bloc.code + "JUMP " + label1 + "\nLABEL " + label2 + "\n";}
+  $code="LABEL " + label1 + "\n" + $logique.code + "JUMPF " + label2 + "\n" + $bloc.code + "JUMP " + label1 + "\nLABEL " + label2 + "\n";}
+  ;
+
+si returns [String code]
+  : 'if' '(' logique ')' then=bloc 'else' sinon=bloc
+    {int iflabel = nextLabel(); int endlabel = nextLabel();
+    $code=$logique.code + "JUMPF " + iflabel + "\n" + $then.code + "JUMP " + endlabel + "\nLABEL " + iflabel + "\n" + $sinon.code + "LABEL " + endlabel + "\n";}
+  | 'if' '(' logique ')' then=bloc
+  {int iflabel = nextLabel();
+  $code=$logique.code + "JUMPF " + iflabel + "\n" + $then.code + "\nLABEL " + iflabel + "\n";}
+  ;
+
+pour returns [String code]
+  : 'for' '(' init=assignation ';' logique ';' cont=assignation ')' bloc
+  { int forlabel = nextLabel(); int endlabel = nextLabel();
+    $code=$init.code + "LABEL " + forlabel + $logique.code + "\nJUMPF " + endlabel + $bloc.code + $cont.code + "JUMP " + forlabel + "\nLABEL " + endlabel + "\n"; }
   ;
 
 condition returns [String code]
@@ -79,7 +96,14 @@ condition returns [String code]
   | a=expr '>' b=expr {$code = $a.code + $b.code + "SUP\n";}
   | a=expr '>=' b=expr {$code = $a.code + $b.code + "SUPEQ\n";}
   | a=expr '==' b=expr {$code = $a.code + $b.code + "EQUAL\n";}
-  | a=expr '!=' b=expr {$code = $a.code + $b.code + "NEQ\n";}
+  | a=expr ('!='|'<>') b=expr {$code = $a.code + $b.code + "NEQ\n";}
+  ;
+
+logique returns [ String code]
+  : condition AND a=logique {$code = $condition.code + $a.code + "MUL\n"; }
+  | condition OR a=logique {$code = $condition.code + $a.code + "\nPUSHI 0\nNEQ\n";}
+  | condition {$code=$condition.code;}
+  | NOT '(' condition ')' {$code=$condition.code + "\nPUSHI 1\nNEQ\n";}
   ;
 
 bloc returns [String code]
@@ -91,6 +115,7 @@ entreesortie returns [ String code ]
   : 'readln' '(' IDENTIFIANT ')' { $code ="READ\nSTOREG "+tableSymboles.getAdresseType($IDENTIFIANT.text).adresse+"\n"; }
   | 'println' '(' expr ')' { $code =$expr.code+"WRITE\nPOP\n"; }
   ;
+
 
 finInstruction
   : ';'
@@ -107,5 +132,11 @@ NEWLINE : '\r'? '\n'  -> skip;
 WS :   (' '|'\t')+ -> skip  ;
 
 ENTIER : ('0'..'9')+  ;
+
+AND : 'and' | '&&' ;
+
+OR : 'or' | '||' ;
+
+NOT : 'not' | '!' ;
 
 UNMATCH : . -> skip ;
