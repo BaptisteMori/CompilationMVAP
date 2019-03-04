@@ -53,10 +53,8 @@ expr returns [String code, String type]
   | a=expr op=('-'|'+') b=expr {$code=evalexpr($a.code,$op.text,$b.code);}
   | '(' e=expr ')' {$code=$e.code;}
   | IDENTIFIANT '(' args ')'                  // appel de fonction
-      {
-        $code="PUSHI 0\n"+$args.code+"CALL "+tableSymboles.getFonction($IDENTIFIANT.text).adresse+"\n";
-        $type=tableSymboles.getFonction($IDENTIFIANT.text).type;
-      }
+    {$code="PUSHI 0\n"+$args.code+"CALL "+tableSymboles.getFonction($IDENTIFIANT.text).adresse+"\n";
+    $type=tableSymboles.getFonction($IDENTIFIANT.text).type;}
   ;
 
 decl returns [ String code ]
@@ -139,7 +137,7 @@ fonction returns [ String code ]
           tableSymboles.nouvelleFonction($IDENTIFIANT.text, label, $TYPE.text);
           tableSymboles.putVar($IDENTIFIANT.text, $TYPE.text);}
           '('  params ? ')'
-          bloc {$code=$bloc.code;}
+          bloc {$code+=$bloc.code;}
       ;
 
 params
