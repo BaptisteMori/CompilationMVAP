@@ -33,7 +33,7 @@ calcul returns [ String code ]
 @after{ System.out.println($code); }
   :   (decl { $code += $decl.code; })*
 
-      { int entry = nextLabel(); $code += "  JUMP " + entry + "\n"; }
+      { int entry = nextLabel(); $code += "JUMP " + entry + "\n"; }
       NEWLINE*
 
       (fonction { $code += $fonction.code; })*
@@ -156,13 +156,13 @@ args returns [ String code, int size]
     : ( expr
     {
       $code=$expr.code;
-      $size+=AdresseType.getSize($type);
+      $size+=AdresseType.getSize($expr.type);
         // code java pour première expression pour arg1
     }
     ( ',' expr
     {
       $code=$expr.code;
-      $size+=AdresseType.getSize($type);
+      $size+=AdresseType.getSize($expr.type);
         // code java pour expression suivante pour argi
     }
     )*
