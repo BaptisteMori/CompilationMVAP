@@ -1,7 +1,7 @@
 grammar Calculette;
 
 @parser::members {
-    private TableSymboles tableSymboles = new TableSymboles();
+    private TablesSymboles tableSymboles = new TablesSymboles();
 
     private String evalexpr (String x, String op, String y) {
         String res = x+y;
@@ -33,7 +33,13 @@ calcul returns [ String code ]
 @after{ System.out.println($code); }
   :   (decl { $code += $decl.code; })*
 
+      { int entry = nextLabel(); $code += "  JUMP " + entry + "\n"; }
       NEWLINE*
+
+      (fonction { $code += $fonction.code; })*
+      NEWLINE*
+
+      { $code += "LABEL " + entry + "\n"; }
 
       (instruction { $code += $instruction.code; })*
       { $code += "HALT\n"; }
@@ -117,6 +123,54 @@ bloc returns [String code]
   @init{ $code = new String();}
   : '{' instruction* '}' {$code+=$instruction.code;}
   ;
+
+fonction returns [ String code ]
+  @init{ tableSymboles.newTableLocale();} // instancier la table locale
+  @after{ tableSymboles.dropTableLocale();} // détruire la table locale
+      : TYPE IDENTIFIANT
+          {
+              // code java gérer la déclaration de "la variable" de retour de la fonction
+          }
+          '('  params ? ')'
+          bloc
+          {
+              // corps de la fonction
+          }
+      ;
+
+  params
+      : TYPE IDENTIFIANT
+          {
+              // code java gérant  une variable locale (argi)
+          }
+          ( ',' TYPE IDENTIFIANT
+              {
+                  // code java gérant une variable locale (argi)
+              }
+          )*
+      ;
+
+   // init nécessaire à cause du ? final et donc args peut être vide (mais $args sera non null)
+  args returns [ String code, int size]
+  @init{ $code = new String(); $size = 0; }
+      : ( expression
+      {
+          // code java pour première expression pour arg1
+      }
+      ( ',' expression
+      {
+          // code java pour expression suivante pour argi
+      }
+      )*
+        )?
+      ;
+
+  expression returns [ String code, String type ]
+      :  IDENTIFIANT '(' args ')'                  // appel de fonction
+          {
+
+          }
+      ;
 
 entreesortie returns [ String code ]
   : 'readln' '(' IDENTIFIANT ')' { $code ="READ\nSTOREG "+tableSymboles.getAdresseType($IDENTIFIANT.text).adresse+"\n"; }
