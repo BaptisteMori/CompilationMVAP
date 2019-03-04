@@ -45,13 +45,18 @@ calcul returns [ String code ]
       { $code += "HALT\n"; }
   ;
 
-expr returns [String code]
+expr returns [String code, String type]
   : ENTIER {$code="PUSHI "+ $ENTIER.getText() + "\n";}
   | IDENTIFIANT { $code="PUSHG "+tableSymboles.getAdresseType($IDENTIFIANT.text).adresse + "\n";}
   | '-' e=expr {$code="PUSHI 0\n" + $e.code + "SUB\n";}
   | a=expr op=('*'|'/') b=expr {$code=evalexpr($a.code,$op.text,$b.code);}
   | a=expr op=('-'|'+') b=expr {$code=evalexpr($a.code,$op.text,$b.code);}
   | '(' e=expr ')' {$code=$e.code;}
+  | IDENTIFIANT '(' args ')'                  // appel de fonction
+      {
+        $code="PUSHI 0\n"+$args.code+"CALL "+tableSymboles.getFonction($IDENTIFIANT.text).adresse+"\n";
+        $type=tableSymboles.getFonction($IDENTIFIANT.text).type;
+      }
   ;
 
 decl returns [ String code ]
@@ -68,6 +73,7 @@ instruction returns [ String code ]
   | dowhile {$code=$dowhile.code;}
   | entreesortie finInstruction {$code=$entreesortie.code;}
   | finInstruction {$code="";}
+  | RETOUR expr finInstruction {int size=AdresseType.getSize($expr.type)+2; $code=$expr.code + "STOREL -" + size + "\n";}
   ;
 
 assignation returns [ String code, String id ]
@@ -128,21 +134,20 @@ fonction returns [ String code ]
   @init{ tableSymboles.newTableLocale();} // instancier la table locale
   @after{ tableSymboles.dropTableLocale();} // détruire la table locale
       : TYPE IDENTIFIANT
-          {tableSymboles.nouvelleFonction($IDENTIFIANT.text, nextLabel(), $TYPE.text);}
+          {int label = nextLabel();
+          $code="LABEL " + label + "\n";
+          tableSymboles.nouvelleFonction($IDENTIFIANT.text, label, $TYPE.text);
+          tableSymboles.putVar($IDENTIFIANT.text, $TYPE.text);}
           '('  params ? ')'
-          bloc {$code+=$params.code + $bloc.code;}
+          bloc {$code=$bloc.code;}
       ;
 
 params
     : TYPE IDENTIFIANT
-        {
-            // code java gérant  une variable locale (argi)
-        }
-        ( ',' TYPE IDENTIFIANT
-            {
-                // code java gérant une variable locale (argi)
-            }
-        )*
+    {tableSymboles.putVar($IDENTIFIANT.text, $TYPE.text);}
+    ( ',' TYPE IDENTIFIANT
+    {tableSymboles.putVar($IDENTIFIANT.text, $TYPE.text);}
+    )*
     ;
 
 // init nécessaire à cause du ? final et donc args peut être vide (mais $args sera non null)
@@ -150,23 +155,18 @@ args returns [ String code, int size]
 @init{ $code = new String(); $size = 0; }
     : ( expr
     {
-      $code=$expr.code;$size++;
+      $code=$expr.code;
+      $size+=AdresseType.getSize($type);
         // code java pour première expression pour arg1
     }
     ( ',' expr
     {
-      $code=$expr.code;$size++;
+      $code=$expr.code;
+      $size+=AdresseType.getSize($type);
         // code java pour expression suivante pour argi
     }
     )*
       )?
-    ;
-
-expression returns [ String code, String type ]
-    :  IDENTIFIANT '(' args ')'                  // appel de fonction
-        {
-          $code="PUSHI 0\n"+$args.code+"CALL "+tableSymboles.getFonction($IDENTIFIANT.text).adresse+"\n";
-        }
     ;
 
 entreesortie returns [ String code ]
@@ -196,5 +196,7 @@ AND : 'and' | '&&' ;
 OR : 'or' | '||' ;
 
 NOT : 'not' | '!' ;
+
+RETOUR : 'return';
 
 UNMATCH : . -> skip ;
