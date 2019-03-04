@@ -1,8 +1,10 @@
 int i;
 int y;
-int z=10;
+int z=15;
 i=4;
 y=42+1+2+-3;
 readln(i);
-while (true) { i = i + 2; }
-println(z);
+repeat {
+i=i+1;
+} until (i>=40)
+println(i);

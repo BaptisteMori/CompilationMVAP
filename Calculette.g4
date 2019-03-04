@@ -59,6 +59,7 @@ instruction returns [ String code ]
   | tantque {$code=$tantque.code;}
   | si {$code=$si.code;}
   | pour {$code=$pour.code;}
+  | dowhile {$code=$dowhile.code;}
   | entreesortie finInstruction {$code=$entreesortie.code;}
   | finInstruction {$code="";}
   ;
@@ -86,6 +87,12 @@ pour returns [String code]
   : 'for' '(' init=assignation ';' logique ';' cont=assignation ')' bloc
   { int forlabel = nextLabel(); int endlabel = nextLabel();
     $code=$init.code + "LABEL " + forlabel + $logique.code + "\nJUMPF " + endlabel + $bloc.code + $cont.code + "JUMP " + forlabel + "\nLABEL " + endlabel + "\n"; }
+  ;
+
+dowhile returns [String code]
+  : 'repeat' bloc 'until' '(' logique ')'
+  { int dolabel = nextLabel();
+    $code="LABEL " + dolabel + "\n" + $bloc.code + $logique.code + "\nJUMPF " + dolabel; }
   ;
 
 condition returns [String code]
