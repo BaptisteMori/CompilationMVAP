@@ -148,12 +148,14 @@ params
 // init nécessaire à cause du ? final et donc args peut être vide (mais $args sera non null)
 args returns [ String code, int size]
 @init{ $code = new String(); $size = 0; }
-    : ( expression
+    : ( expr
     {
+      $code=$expr.code;$size++;
         // code java pour première expression pour arg1
     }
-    ( ',' expression
+    ( ',' expr
     {
+      $code=$expr.code;$size++;
         // code java pour expression suivante pour argi
     }
     )*
@@ -162,7 +164,9 @@ args returns [ String code, int size]
 
 expression returns [ String code, String type ]
     :  IDENTIFIANT '(' args ')'                  // appel de fonction
-        {$code=$args.code + "CALL " +       }
+        {
+          $code="PUSHI 0\n"+$args.code+"CALL "+tableSymboles.getFonction($IDENTIFIANT.text).adresse+"\n";
+        }
     ;
 
 entreesortie returns [ String code ]
