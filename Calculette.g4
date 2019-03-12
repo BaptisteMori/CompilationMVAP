@@ -54,7 +54,7 @@ expr returns [String code, String type]
   | '(' e=expr ')' {$code=$e.code;}
   | IDENTIFIANT '(' args ')'                  // appel de fonction
     {$code="PUSHI 0\n"+$args.code+"CALL "+tableSymboles.getFonction($IDENTIFIANT.text).adresse+"\n";
-    $type=tableSymboles.getFonction($IDENTIFIANT.text).type;}
+  $type=tableSymboles.getFonction($IDENTIFIANT.text).type;}
   ;
 
 decl returns [ String code ]
@@ -70,8 +70,8 @@ instruction returns [ String code ]
   | pour {$code=$pour.code;}
   | dowhile {$code=$dowhile.code;}
   | entreesortie finInstruction {$code=$entreesortie.code;}
+  | RETOUR expr finInstruction {$code=$expr.code + "STOREL " + tableSymboles.getAdresseType("return").adresse + "\n";}
   | finInstruction {$code="";}
-  | RETOUR expr finInstruction {int size=AdresseType.getSize($expr.type)+2; $code=$expr.code + "STOREL -" + size + "\n";}
   ;
 
 assignation returns [ String code, String id ]
@@ -96,13 +96,13 @@ si returns [String code]
 pour returns [String code]
   : 'for' '(' init=assignation ';' logique ';' cont=assignation ')' bloc
   { int forlabel = nextLabel(); int endlabel = nextLabel();
-    $code=$init.code + "LABEL " + forlabel + $logique.code + "\nJUMPF " + endlabel + $bloc.code + $cont.code + "JUMP " + forlabel + "\nLABEL " + endlabel + "\n"; }
+    $code=$init.code + "LABEL " + forlabel + $logique.code + "\nJUMPF " + endlabel+ "\n" + $bloc.code + $cont.code + "JUMP " + forlabel + "\nLABEL " + endlabel + "\n"; }
   ;
 
 dowhile returns [String code]
   : 'repeat' bloc 'until' '(' logique ')'
   { int dolabel = nextLabel();
-    $code="LABEL " + dolabel + "\n" + $bloc.code + $logique.code + "\nJUMPF " + dolabel; }
+    $code="LABEL " + dolabel + "\n" + $bloc.code + $logique.code + "\nJUMPF " + dolabel + "\n"; }
   ;
 
 condition returns [String code]
@@ -130,14 +130,13 @@ bloc returns [String code]
 
 fonction returns [ String code ]
   @init{ tableSymboles.newTableLocale();} // instancier la table locale
-  @after{ tableSymboles.dropTableLocale();} // détruire la table locale
+  @after{ $code+="RETURN\n"; tableSymboles.dropTableLocale();} // détruire la table locale
       : TYPE IDENTIFIANT
           {int label = nextLabel();
           $code="LABEL " + label + "\n";
           tableSymboles.nouvelleFonction($IDENTIFIANT.text, label, $TYPE.text);
-          tableSymboles.putVar($IDENTIFIANT.text, $TYPE.text);}
-          '('  params ? ')'
-          bloc {$code+=$bloc.code;}
+          tableSymboles.putVar("return", $TYPE.text);}
+          '('  params ? ')' bloc {$code+=$bloc.code;}
       ;
 
 params
@@ -153,14 +152,14 @@ args returns [ String code, int size]
 @init{ $code = new String(); $size = 0; }
     : ( expr
     {
-      $code=$expr.code;
-      $size+=AdresseType.getSize($expr.type);
+      $code+=$expr.code+"\n";
+      $size+=1;
         // code java pour première expression pour arg1
     }
     ( ',' expr
     {
-      $code=$expr.code;
-      $size+=AdresseType.getSize($expr.type);
+      $code+=$expr.code+"\n";
+      $size+=1;
         // code java pour expression suivante pour argi
     }
     )*
@@ -180,10 +179,7 @@ finInstruction
 // lexer
 TYPE : 'int' | 'float' ;
 
-IDENTIFIANT
-    :   (('a'..'z' | 'A'..'Z' | '_')('a'..'z' | 'A'..'Z' | '_' | '0'..'9')*);
-
-NEWLINE : '\r'? '\n'  -> skip;
+NEWLINE : '\r'? '\n' -> skip;
 
 WS :   (' '|'\t')+ -> skip  ;
 
@@ -196,5 +192,8 @@ OR : 'or' | '||' ;
 NOT : 'not' | '!' ;
 
 RETOUR : 'return';
+
+IDENTIFIANT
+:   (('a'..'z' | 'A'..'Z' | '_')('a'..'z' | 'A'..'Z' | '_' | '0'..'9')*);
 
 UNMATCH : . -> skip ;

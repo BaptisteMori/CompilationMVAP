@@ -1,10 +1,7 @@
 int i;
 int y;
 int z=15;
-i=4;
-y=42+1+2+-3;
-readln(i);
-repeat {
-i=i+1;
-} until (i>=40)
-println(i);
+int f(int arg){
+return arg+2;
+}
+println(f(3));
