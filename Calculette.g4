@@ -97,7 +97,7 @@ si returns [String code]
 pour returns [String code]
   :'for' '(' init=assignation ';' logique ';' cont=assignation ')' instruction
   { int forlabel = nextLabel(); int endlabel = nextLabel();
-    $code=$init.code + "LABEL " + forlabel + $logique.code + "\nJUMPF " + endlabel+ "\n" + $instruction.code + $cont.code + "JUMP " + forlabel + "\nLABEL " + endlabel + "\n"; }
+    $code=$init.code + "LABEL " + forlabel + "\n" + $logique.code + "\nJUMPF " + endlabel+ "\n" + $instruction.code + $cont.code + "JUMP " + forlabel + "\nLABEL " + endlabel + "\n"; }
   ;
 
 dowhile returns [String code]
