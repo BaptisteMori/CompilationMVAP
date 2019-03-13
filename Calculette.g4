@@ -101,9 +101,9 @@ pour returns [String code]
   ;
 
 dowhile returns [String code]
-  : 'repeat' bloc 'until' '(' logique ')'
+  : 'repeat' instruction 'until' '(' logique ')'
   { int dolabel = nextLabel();
-    $code="LABEL " + dolabel + "\n" + $bloc.code + $logique.code + "\nJUMPF " + dolabel + "\n"; }
+    $code="LABEL " + dolabel + "\n" + $instruction.code + $logique.code + "\nJUMPF " + dolabel + "\n"; }
   ;
 
 condition returns [String code]
