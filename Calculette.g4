@@ -70,6 +70,7 @@ instruction returns [ String code ]
   | pour {$code=$pour.code;}
   | dowhile {$code=$dowhile.code;}
   | entreesortie finInstruction {$code=$entreesortie.code;}
+  | bloc finInstruction {$code=$bloc.code; }
   | RETOUR expr finInstruction {$code=$expr.code + "STOREL " + tableSymboles.getAdresseType("return").adresse + "\n";}
   | finInstruction {$code="";}
   ;
@@ -82,9 +83,6 @@ tantque returns [String code]
   : 'while' '(' logique ')' instruction { int label1 = nextLabel(); int label2= nextLabel(); $code="LABEL " +
    label1 + "\n" + $logique.code + "JUMPF " + label2 + "\n" + $instruction.code + "JUMP " + label1 + "\nLABEL " +
   label2 + "\n"; }
-  | 'while' '(' logique ')' bloc
-   {int label1 = nextLabel(); int label2= nextLabel();
-  $code="LABEL " + label1 + "\n" + $logique.code + "JUMPF " + label2 + "\n" + $bloc.code + "JUMP " + label1 + "\nLABEL " + label2 + "\n";}
   ;
 
 si returns [String code]
@@ -94,21 +92,12 @@ si returns [String code]
   | 'if' '(' logique ')' then=instruction
     {int iflabel = nextLabel();
     $code=$logique.code + "JUMPF " + iflabel + "\n" + $then.code + "\nLABEL " + iflabel + "\n";}
-  | 'if' '(' logique ')' then=bloc 'else' sinon=bloc
-    {int iflabel = nextLabel(); int endlabel = nextLabel();
-    $code=$logique.code + "JUMPF " + iflabel + "\n" + $then.code + "JUMP " + endlabel + "\nLABEL " + iflabel + "\n" + $sinon.code + "LABEL " + endlabel + "\n";  }
-  | 'if' '(' logique ')' then=bloc
-  {int iflabel = nextLabel();
-  $code=$logique.code + "JUMPF " + iflabel + "\n" + $then.code + "\nLABEL " + iflabel + "\n";}
   ;
 
 pour returns [String code]
   :'for' '(' init=assignation ';' logique ';' cont=assignation ')' instruction
   { int forlabel = nextLabel(); int endlabel = nextLabel();
     $code=$init.code + "LABEL " + forlabel + $logique.code + "\nJUMPF " + endlabel+ "\n" + $instruction.code + $cont.code + "JUMP " + forlabel + "\nLABEL " + endlabel + "\n"; }
-  | 'for' '(' init=assignation ';' logique ';' cont=assignation ')' bloc
-  { int forlabel = nextLabel(); int endlabel = nextLabel();
-    $code=$init.code + "LABEL " + forlabel + $logique.code + "\nJUMPF " + endlabel+ "\n" + $bloc.code + $cont.code + "JUMP " + forlabel + "\nLABEL " + endlabel + "\n"; }
   ;
 
 dowhile returns [String code]
