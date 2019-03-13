@@ -64,12 +64,12 @@ decl returns [ String code ]
 
 instruction returns [ String code ]
   : a=assignation finInstruction {$code=$a.code;}
+  | entreesortie finInstruction {$code=$entreesortie.code;}
   | b=expr finInstruction {$code=$b.code;}
   | tantque {$code=$tantque.code;}
   | si {$code=$si.code;}
   | pour {$code=$pour.code;}
   | dowhile {$code=$dowhile.code;}
-  | entreesortie finInstruction {$code=$entreesortie.code;}
   | bloc finInstruction {$code=$bloc.code; }
   | RETOUR expr finInstruction {$code=$expr.code + "STOREL " + tableSymboles.getAdresseType("return").adresse + "\n";}
   | finInstruction {$code="";}
