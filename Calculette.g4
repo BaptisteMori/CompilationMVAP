@@ -79,22 +79,34 @@ assignation returns [ String code, String id ]
   ;
 
 tantque returns [String code]
-  : 'while' '(' logique ')' bloc
-  {int label1 = nextLabel(); int label2= nextLabel();
+  : 'while' '(' logique ')' instruction { int label1 = nextLabel(); int label2= nextLabel(); $code="LABEL " +
+   label1 + "\n" + $logique.code + "JUMPF " + label2 + "\n" + $instruction.code + "JUMP " + label1 + "\nLABEL " +
+  label2 + "\n"; }
+  | 'while' '(' logique ')' bloc
+   {int label1 = nextLabel(); int label2= nextLabel();
   $code="LABEL " + label1 + "\n" + $logique.code + "JUMPF " + label2 + "\n" + $bloc.code + "JUMP " + label1 + "\nLABEL " + label2 + "\n";}
   ;
 
 si returns [String code]
-  : 'if' '(' logique ')' then=bloc 'else' sinon=bloc
+  : 'if' '(' logique ')' then=instruction 'else' sinon=instruction
     {int iflabel = nextLabel(); int endlabel = nextLabel();
-    $code=$logique.code + "JUMPF " + iflabel + "\n" + $then.code + "JUMP " + endlabel + "\nLABEL " + iflabel + "\n" + $sinon.code + "LABEL " + endlabel + "\n";}
+    $code=$logique.code + "JUMPF " + iflabel + "\n" + $then.code + "JUMP " + endlabel + "\nLABEL " + iflabel + "\n" + $sinon.code + "LABEL " + endlabel + "\n";  }
+  | 'if' '(' logique ')' then=instruction
+    {int iflabel = nextLabel();
+    $code=$logique.code + "JUMPF " + iflabel + "\n" + $then.code + "\nLABEL " + iflabel + "\n";}
+  | 'if' '(' logique ')' then=bloc 'else' sinon=bloc
+    {int iflabel = nextLabel(); int endlabel = nextLabel();
+    $code=$logique.code + "JUMPF " + iflabel + "\n" + $then.code + "JUMP " + endlabel + "\nLABEL " + iflabel + "\n" + $sinon.code + "LABEL " + endlabel + "\n";  }
   | 'if' '(' logique ')' then=bloc
   {int iflabel = nextLabel();
   $code=$logique.code + "JUMPF " + iflabel + "\n" + $then.code + "\nLABEL " + iflabel + "\n";}
   ;
 
 pour returns [String code]
-  : 'for' '(' init=assignation ';' logique ';' cont=assignation ')' bloc
+  :'for' '(' init=assignation ';' logique ';' cont=assignation ')' instruction
+  { int forlabel = nextLabel(); int endlabel = nextLabel();
+    $code=$init.code + "LABEL " + forlabel + $logique.code + "\nJUMPF " + endlabel+ "\n" + $instruction.code + $cont.code + "JUMP " + forlabel + "\nLABEL " + endlabel + "\n"; }
+  | 'for' '(' init=assignation ';' logique ';' cont=assignation ')' bloc
   { int forlabel = nextLabel(); int endlabel = nextLabel();
     $code=$init.code + "LABEL " + forlabel + $logique.code + "\nJUMPF " + endlabel+ "\n" + $bloc.code + $cont.code + "JUMP " + forlabel + "\nLABEL " + endlabel + "\n"; }
   ;
@@ -114,13 +126,14 @@ condition returns [String code]
   | a=expr '>=' b=expr {$code = $a.code + $b.code + "SUPEQ\n";}
   | a=expr '==' b=expr {$code = $a.code + $b.code + "EQUAL\n";}
   | a=expr ('!='|'<>') b=expr {$code = $a.code + $b.code + "NEQ\n";}
+  | NOT c=condition { $code = $c.code+"PUSHI 1\nNEQ\n";}
   ;
 
 logique returns [ String code]
   : condition AND a=logique {$code = $condition.code + $a.code + "MUL\n"; }
-  | condition OR a=logique {$code = $condition.code + $a.code + "\nPUSHI 0\nNEQ\n";}
+  | condition OR a=logique {$code = $condition.code + $a.code + "\nNEQ\n";}
   | condition {$code=$condition.code;}
-  | NOT '(' condition ')' {$code=$condition.code + "\nPUSHI 1\nNEQ\n";}
+  | NOT '(' c=condition ')' {$code=$c.code + "\nPUSHI 1\nNEQ\n";}
   ;
 
 bloc returns [String code]
@@ -173,13 +186,13 @@ entreesortie returns [ String code ]
 
 
 finInstruction
-  : ';'
+  : (';'| NEWLINE)+
   ;
 
 // lexer
 TYPE : 'int' | 'float' ;
 
-NEWLINE : '\r'? '\n' -> skip;
+NEWLINE : '\r'? '\n';
 
 WS :   (' '|'\t')+ -> skip  ;
 
