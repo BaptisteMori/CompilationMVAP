@@ -1,7 +1,7 @@
-int i;
-int y;
-int z=15;
-int f(int arg){
-return arg+2;
+int i=0
+int x=42
+while (i < 5){
+println(i)
+println(x)
+i=i+1
 }
-println(f(3));

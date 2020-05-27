@@ -1,7 +1,6 @@
-// Generated from Calculette.g4 by ANTLR 4.4
+// Generated from Calculette.g4 by ANTLR 4.7.2
 
 import org.antlr.v4.runtime.ParserRuleContext;
-import org.antlr.v4.runtime.misc.NotNull;
 import org.antlr.v4.runtime.tree.ErrorNode;
 import org.antlr.v4.runtime.tree.TerminalNode;
 
@@ -16,240 +15,240 @@ public class CalculetteBaseListener implements CalculetteListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterDecl(@NotNull CalculetteParser.DeclContext ctx) { }
+	@Override public void enterStart(CalculetteParser.StartContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitDecl(@NotNull CalculetteParser.DeclContext ctx) { }
+	@Override public void exitStart(CalculetteParser.StartContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterAssignation(@NotNull CalculetteParser.AssignationContext ctx) { }
+	@Override public void enterCalcul(CalculetteParser.CalculContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitAssignation(@NotNull CalculetteParser.AssignationContext ctx) { }
+	@Override public void exitCalcul(CalculetteParser.CalculContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterStart(@NotNull CalculetteParser.StartContext ctx) { }
+	@Override public void enterExpr(CalculetteParser.ExprContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitStart(@NotNull CalculetteParser.StartContext ctx) { }
+	@Override public void exitExpr(CalculetteParser.ExprContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterPour(@NotNull CalculetteParser.PourContext ctx) { }
+	@Override public void enterDecl(CalculetteParser.DeclContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitPour(@NotNull CalculetteParser.PourContext ctx) { }
+	@Override public void exitDecl(CalculetteParser.DeclContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterParams(@NotNull CalculetteParser.ParamsContext ctx) { }
+	@Override public void enterInstruction(CalculetteParser.InstructionContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitParams(@NotNull CalculetteParser.ParamsContext ctx) { }
+	@Override public void exitInstruction(CalculetteParser.InstructionContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterDowhile(@NotNull CalculetteParser.DowhileContext ctx) { }
+	@Override public void enterAssignation(CalculetteParser.AssignationContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitDowhile(@NotNull CalculetteParser.DowhileContext ctx) { }
+	@Override public void exitAssignation(CalculetteParser.AssignationContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterBloc(@NotNull CalculetteParser.BlocContext ctx) { }
+	@Override public void enterTantque(CalculetteParser.TantqueContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitBloc(@NotNull CalculetteParser.BlocContext ctx) { }
+	@Override public void exitTantque(CalculetteParser.TantqueContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterArgs(@NotNull CalculetteParser.ArgsContext ctx) { }
+	@Override public void enterSi(CalculetteParser.SiContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitArgs(@NotNull CalculetteParser.ArgsContext ctx) { }
+	@Override public void exitSi(CalculetteParser.SiContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterFinInstruction(@NotNull CalculetteParser.FinInstructionContext ctx) { }
+	@Override public void enterPour(CalculetteParser.PourContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitFinInstruction(@NotNull CalculetteParser.FinInstructionContext ctx) { }
+	@Override public void exitPour(CalculetteParser.PourContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterCondition(@NotNull CalculetteParser.ConditionContext ctx) { }
+	@Override public void enterDowhile(CalculetteParser.DowhileContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitCondition(@NotNull CalculetteParser.ConditionContext ctx) { }
+	@Override public void exitDowhile(CalculetteParser.DowhileContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterTantque(@NotNull CalculetteParser.TantqueContext ctx) { }
+	@Override public void enterCondition(CalculetteParser.ConditionContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitTantque(@NotNull CalculetteParser.TantqueContext ctx) { }
+	@Override public void exitCondition(CalculetteParser.ConditionContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterCalcul(@NotNull CalculetteParser.CalculContext ctx) { }
+	@Override public void enterLogique(CalculetteParser.LogiqueContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitCalcul(@NotNull CalculetteParser.CalculContext ctx) { }
+	@Override public void exitLogique(CalculetteParser.LogiqueContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterInstruction(@NotNull CalculetteParser.InstructionContext ctx) { }
+	@Override public void enterBloc(CalculetteParser.BlocContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitInstruction(@NotNull CalculetteParser.InstructionContext ctx) { }
+	@Override public void exitBloc(CalculetteParser.BlocContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterSi(@NotNull CalculetteParser.SiContext ctx) { }
+	@Override public void enterFonction(CalculetteParser.FonctionContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitSi(@NotNull CalculetteParser.SiContext ctx) { }
+	@Override public void exitFonction(CalculetteParser.FonctionContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterEntreesortie(@NotNull CalculetteParser.EntreesortieContext ctx) { }
+	@Override public void enterParams(CalculetteParser.ParamsContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitEntreesortie(@NotNull CalculetteParser.EntreesortieContext ctx) { }
+	@Override public void exitParams(CalculetteParser.ParamsContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterFonction(@NotNull CalculetteParser.FonctionContext ctx) { }
+	@Override public void enterArgs(CalculetteParser.ArgsContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitFonction(@NotNull CalculetteParser.FonctionContext ctx) { }
+	@Override public void exitArgs(CalculetteParser.ArgsContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterExpr(@NotNull CalculetteParser.ExprContext ctx) { }
+	@Override public void enterEntreesortie(CalculetteParser.EntreesortieContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitExpr(@NotNull CalculetteParser.ExprContext ctx) { }
+	@Override public void exitEntreesortie(CalculetteParser.EntreesortieContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterLogique(@NotNull CalculetteParser.LogiqueContext ctx) { }
+	@Override public void enterFinInstruction(CalculetteParser.FinInstructionContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitLogique(@NotNull CalculetteParser.LogiqueContext ctx) { }
+	@Override public void exitFinInstruction(CalculetteParser.FinInstructionContext ctx) { }
 
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterEveryRule(@NotNull ParserRuleContext ctx) { }
+	@Override public void enterEveryRule(ParserRuleContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitEveryRule(@NotNull ParserRuleContext ctx) { }
+	@Override public void exitEveryRule(ParserRuleContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void visitTerminal(@NotNull TerminalNode node) { }
+	@Override public void visitTerminal(TerminalNode node) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void visitErrorNode(@NotNull ErrorNode node) { }
+	@Override public void visitErrorNode(ErrorNode node) { }
 }
